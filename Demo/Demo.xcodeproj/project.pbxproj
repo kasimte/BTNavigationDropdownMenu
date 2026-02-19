@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA000001AAAA000000000001 /* BTForceUnwrapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000001AAAA000000000002 /* BTForceUnwrapTests.swift */; };
+		AA000002AAAA000000000001 /* BTWindowHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002AAAA000000000002 /* BTWindowHelper.swift */; };
 		0B11A6361F0C12F500CB4A0B /* BTNavigationDropdownMenu.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B11A62C1F0C12F500CB4A0B /* BTNavigationDropdownMenu.bundle */; };
 		0B11A6371F0C12F500CB4A0B /* BTNavigationDropdownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11A62D1F0C12F500CB4A0B /* BTNavigationDropdownMenu.swift */; };
 		0B11A6381F0C12F500CB4A0B /* BTTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11A62E1F0C12F500CB4A0B /* BTTitle.swift */; };
@@ -52,6 +54,8 @@
 		2E44D6B31B4C326300C9C49E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		2E44D6B91B4C326300C9C49E /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E44D6BE1B4C326300C9C49E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000001AAAA000000000002 /* BTForceUnwrapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTForceUnwrapTests.swift; sourceTree = "<group>"; };
+		AA000002AAAA000000000002 /* BTWindowHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTWindowHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 				0B11A6331F0C12F500CB4A0B /* BTTableCellContentView.swift */,
 				0B11A6341F0C12F500CB4A0B /* BTTableView.swift */,
 				0B11A6351F0C12F500CB4A0B /* BTTableViewCell.swift */,
+				AA000002AAAA000000000002 /* BTWindowHelper.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 		2E44D6BC1B4C326300C9C49E /* DemoTests */ = {
 			isa = PBXGroup;
 			children = (
+				AA000001AAAA000000000002 /* BTForceUnwrapTests.swift */,
 				2E44D6BD1B4C326300C9C49E /* Supporting Files */,
 			);
 			path = DemoTests;
@@ -278,6 +284,7 @@
 				0B11A63C1F0C12F500CB4A0B /* BTTableView.swift in Sources */,
 				2E44D6AA1B4C326300C9C49E /* AppDelegate.swift in Sources */,
 				0B11A63B1F0C12F500CB4A0B /* BTTableCellContentView.swift in Sources */,
+				AA000002AAAA000000000001 /* BTWindowHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001AAAA000000000001 /* BTForceUnwrapTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,7 +473,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "phambatho.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Debug;
@@ -479,7 +487,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "phambatho.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Demo.app/Demo";
 			};
 			name = Release;

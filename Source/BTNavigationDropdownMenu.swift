@@ -244,11 +244,11 @@ open class BTNavigationDropdownMenu: UIView {
 
      - parameters:
         - navigationController: The present and visible navigation controller.
-        - containerView: The container view. Default is keyWindow.
+        - containerView: The container view. Default is the active window.
         - title: A string to define title to be displayed.
         - items: The array of items to select
      */
-    public convenience init(navigationController: UINavigationController? = nil, containerView: UIView = UIApplication.shared.keyWindow!, title: String, items: [String]) {
+    public convenience init(navigationController: UINavigationController? = nil, containerView: UIView? = nil, title: String, items: [String]) {
 
         self.init(navigationController: navigationController, containerView: containerView, title: BTTitle.title(title), items: items)
     }
@@ -261,13 +261,14 @@ open class BTNavigationDropdownMenu: UIView {
 
      - parameters:
         - navigationController: The present and visible navigation controller.
-        - containerView: The container view. Default is keyWindow.
+        - containerView: The container view. Default is the active window.
         - title: An enum to define title to be displayed, can be a string or index of items.
         - items: The array of items to select
      */
-    public init(navigationController: UINavigationController? = nil, containerView: UIView = UIApplication.shared.keyWindow!, title: BTTitle, items: [String]) {
-        // Key window
-        guard let window = UIApplication.shared.keyWindow else {
+    public init(navigationController: UINavigationController? = nil, containerView: UIView? = nil, title: BTTitle, items: [String]) {
+        // Resolve container view and key window
+        let activeWindow = BTWindowHelper.activeWindow
+        guard let resolvedContainer = containerView ?? activeWindow else {
             super.init(frame: CGRect.zero)
             return
         }
@@ -276,7 +277,7 @@ open class BTNavigationDropdownMenu: UIView {
         if let navigationController = navigationController {
             self.navigationController = navigationController
         } else {
-            self.navigationController = window.rootViewController?.topMostViewController?.navigationController
+            self.navigationController = activeWindow?.rootViewController?.topMostViewController?.navigationController
         }
 
         // Get titleSize
@@ -297,7 +298,8 @@ open class BTNavigationDropdownMenu: UIView {
         titleSize = (titleToDisplay as NSString).size(withAttributes: [NSAttributedString.Key.font: self.configuration.navigationBarTitleFont])
 
         // Set frame
-        let frame = CGRect(x: 0, y: 0, width: titleSize.width + (self.configuration.arrowPadding + self.configuration.arrowImage.size.width)*2, height: self.navigationController!.navigationBar.frame.height)
+        let navBarHeight = self.navigationController?.navigationBar.frame.height ?? 44
+        let frame = CGRect(x: 0, y: 0, width: titleSize.width + (self.configuration.arrowPadding + self.configuration.arrowImage.size.width)*2, height: navBarHeight)
 
         super.init(frame:frame)
 
@@ -319,7 +321,7 @@ open class BTNavigationDropdownMenu: UIView {
         self.menuArrow = UIImageView(image: self.configuration.arrowImage.withRenderingMode(.alwaysTemplate))
         self.menuButton.addSubview(self.menuArrow)
 
-        let menuWrapperBounds = window.bounds
+        let menuWrapperBounds = resolvedContainer.bounds
 
         // Set up DropdownMenu
         self.menuWrapper = UIView(frame: CGRect(x: menuWrapperBounds.origin.x, y: 0, width: menuWrapperBounds.width, height: menuWrapperBounds.height))
@@ -340,16 +342,21 @@ open class BTNavigationDropdownMenu: UIView {
 
         // Init table view
         let tabBarHeight = self.navigationController?.tabBarController?.tabBar.bounds.size.height ?? 0
-        let navBarHeight = self.navigationController?.navigationBar.bounds.size.height ?? 0
-        let statusBarHeight = UIApplication.shared.statusBarFrame.height
-        self.tableView = BTTableView(frame: CGRect(x: menuWrapperBounds.origin.x, y: menuWrapperBounds.origin.y + 0.5, width: menuWrapperBounds.width, height: menuWrapperBounds.height + 300 - tabBarHeight - navBarHeight - statusBarHeight), items: items, title: titleToDisplay, configuration: self.configuration)
+        let navBarHeightForTable = self.navigationController?.navigationBar.bounds.size.height ?? 0
+        let statusBarHeight: CGFloat
+        if #available(iOS 13.0, *) {
+            statusBarHeight = BTWindowHelper.activeWindow?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        } else {
+            statusBarHeight = UIApplication.shared.statusBarFrame.height
+        }
+        self.tableView = BTTableView(frame: CGRect(x: menuWrapperBounds.origin.x, y: menuWrapperBounds.origin.y + 0.5, width: menuWrapperBounds.width, height: menuWrapperBounds.height + 300 - tabBarHeight - navBarHeightForTable - statusBarHeight), items: items, title: titleToDisplay, configuration: self.configuration)
 
         self.tableView.selectRowAtIndexPathHandler = { [weak self] (indexPath: Int) -> () in
             guard let selfie = self else {
                 return
             }
-            selfie.didSelectItemAtIndexHandler!(indexPath)
-            if selfie.shouldChangeTitleText! {
+            selfie.didSelectItemAtIndexHandler?(indexPath)
+            if selfie.shouldChangeTitleText == true {
                 selfie.setMenuTitle("\(selfie.tableView.items[indexPath])")
             }
             self?.hideMenu()
@@ -366,25 +373,32 @@ open class BTNavigationDropdownMenu: UIView {
         self.menuWrapper.addSubview(self.topSeparator)
 
         // Remove MenuWrapper from container view to avoid leaks
-        containerView.subviews
+        resolvedContainer.subviews
             .filter({$0.viewIdentifier == "BTNavigationDropDownMenu-MenuWrapper"})
             .forEach({$0.removeFromSuperview()})
 
         // Add Menu View to container view
-        containerView.addSubview(self.menuWrapper)
+        resolvedContainer.addSubview(self.menuWrapper)
 
         // By default, hide menu view
         self.menuWrapper.isHidden = true
     }
 
     override open func layoutSubviews() {
-        self.menuTitle.sizeToFit()
-        self.menuTitle.center = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height/2)
-        self.menuTitle.textColor = self.configuration.menuTitleColor
-        self.menuArrow.sizeToFit()
-        self.menuArrow.center = CGPoint(x: self.menuTitle.frame.maxX + self.configuration.arrowPadding, y: self.frame.size.height/2)
-        self.menuWrapper.frame.origin.y = self.navigationController!.navigationBar.frame.maxY
-        self.tableView.reloadData()
+        guard let menuTitle = self.menuTitle,
+              let menuArrow = self.menuArrow,
+              let menuWrapper = self.menuWrapper else {
+            return
+        }
+        menuTitle.sizeToFit()
+        menuTitle.center = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height/2)
+        menuTitle.textColor = self.configuration.menuTitleColor
+        menuArrow.sizeToFit()
+        menuArrow.center = CGPoint(x: menuTitle.frame.maxX + self.configuration.arrowPadding, y: self.frame.size.height/2)
+        if let nc = self.navigationController {
+            menuWrapper.frame.origin.y = nc.navigationBar.frame.maxY
+        }
+        self.tableView?.reloadData()
     }
 
     open func show() {
@@ -418,7 +432,7 @@ open class BTNavigationDropdownMenu: UIView {
         self.tableView.selectedIndexPath = index
         self.tableView.reloadData()
 
-        if self.shouldChangeTitleText! {
+        if self.shouldChangeTitleText == true {
             self.setMenuTitle("\(self.tableView.items[index])")
         }
     }
@@ -433,7 +447,8 @@ open class BTNavigationDropdownMenu: UIView {
     }
 
     func showMenu() {
-        self.menuWrapper.frame.origin.y = self.navigationController!.navigationBar.frame.maxY
+        guard let nc = self.navigationController else { return }
+        self.menuWrapper.frame.origin.y = nc.navigationBar.frame.maxY
 
         self.isShown = true
 
@@ -516,11 +531,11 @@ open class BTNavigationDropdownMenu: UIView {
             }
         })
     }
-    
+
     func setMenuTitle(_ title: String) {
         self.menuTitle.text = title
     }
-    
+
     @objc func menuButtonTapped(_ sender: UIButton) {
         self.isShown == true ? hideMenu() : showMenu()
     }
