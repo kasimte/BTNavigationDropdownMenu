@@ -19,6 +19,7 @@
 		AA8E37E721830B69009609E6 /* BTTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E37DA21830B69009609E6 /* BTTableView.swift */; };
 		AA8E37E821830B69009609E6 /* BTConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E37DB21830B69009609E6 /* BTConfiguration.swift */; };
 		AA8E37E921830B69009609E6 /* BTNavigationDropdownMenu.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AA8E37DC21830B69009609E6 /* BTNavigationDropdownMenu.bundle */; };
+		BB000001BBBB000000000001 /* BTWindowHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000001BBBB000000000002 /* BTWindowHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		AA8E37DB21830B69009609E6 /* BTConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTConfiguration.swift; sourceTree = "<group>"; };
 		AA8E37DC21830B69009609E6 /* BTNavigationDropdownMenu.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BTNavigationDropdownMenu.bundle; sourceTree = "<group>"; };
 		AA8E37DD21830B69009609E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB000001BBBB000000000002 /* BTWindowHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BTWindowHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				AA8E37D921830B69009609E6 /* BTTableCellContentView.swift */,
 				AA8E37DA21830B69009609E6 /* BTTableView.swift */,
 				AA8E37DB21830B69009609E6 /* BTConfiguration.swift */,
+				BB000001BBBB000000000002 /* BTWindowHelper.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				AA8E37E221830B69009609E6 /* BTTitle.swift in Sources */,
 				AA8E37E821830B69009609E6 /* BTConfiguration.swift in Sources */,
 				AA8E37E121830B69009609E6 /* BTNavigationDropdownMenu.swift in Sources */,
+				BB000001BBBB000000000001 /* BTWindowHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

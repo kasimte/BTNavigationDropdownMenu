@@ -47,10 +47,18 @@ final class BTConfiguration {
     init() {
         // Path for image
         let bundle = Bundle(for: BTConfiguration.self)
-        let url = bundle.url(forResource: "BTNavigationDropdownMenu", withExtension: "bundle")
-        let imageBundle = Bundle(url: url!)
-        let checkMarkImagePath = imageBundle?.path(forResource: "checkmark_icon", ofType: "png")
-        let arrowImagePath = imageBundle?.path(forResource: "arrow_down_icon", ofType: "png")
+        let checkMarkImage: UIImage
+        let arrowImage: UIImage
+        if let url = bundle.url(forResource: "BTNavigationDropdownMenu", withExtension: "bundle"),
+           let imageBundle = Bundle(url: url) {
+            let checkMarkImagePath = imageBundle.path(forResource: "checkmark_icon", ofType: "png")
+            let arrowImagePath = imageBundle.path(forResource: "arrow_down_icon", ofType: "png")
+            checkMarkImage = checkMarkImagePath.flatMap { UIImage(contentsOfFile: $0) } ?? UIImage()
+            arrowImage = arrowImagePath.flatMap { UIImage(contentsOfFile: $0) } ?? UIImage()
+        } else {
+            checkMarkImage = UIImage()
+            arrowImage = UIImage()
+        }
 
         // Set default values
         self.menuTitleColor = UIColor.darkGray
@@ -64,10 +72,10 @@ final class BTConfiguration {
         self.navigationBarTitleFont = UIFont.systemFont(ofSize: 17, weight: .bold)
         self.cellTextLabelAlignment = NSTextAlignment.left
         self.cellSelectionColor = UIColor.lightGray
-        self.checkMarkImage = UIImage(contentsOfFile: checkMarkImagePath!)
+        self.checkMarkImage = checkMarkImage
         self.shouldKeepSelectedCellColor = false
         self.animationDuration = 0.5
-        self.arrowImage = UIImage(contentsOfFile: arrowImagePath!)
+        self.arrowImage = arrowImage
         self.arrowPadding = 15
         self.maskBackgroundColor = UIColor.black
         self.maskBackgroundOpacity = 0.3

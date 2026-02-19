@@ -26,36 +26,38 @@ import UIKit
 class BTTableViewCell: UITableViewCell {
     let checkmarkIconWidth: CGFloat = 50
     let horizontalMargin: CGFloat = 20
-    
+
     var checkmarkIcon: UIImageView!
     var cellContentFrame: CGRect!
     var configuration: BTConfiguration!
-    
+
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, configuration: BTConfiguration) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         self.configuration = configuration
-        
+
         // Setup cell
-        let windowWidth = UIApplication.shared.keyWindow?.frame.width ?? UIScreen.main.bounds.width
+        let windowWidth = BTWindowHelper.activeWindow?.frame.width ?? UIScreen.main.bounds.width
         cellContentFrame = CGRect(x: 0, y: 0, width: windowWidth, height: self.configuration.cellHeight)
         self.contentView.backgroundColor = self.configuration.cellBackgroundColor
         self.selectionStyle = UITableViewCell.SelectionStyle.none
-        self.textLabel!.textColor = self.configuration.cellTextLabelColor
-        self.textLabel!.font = self.configuration.cellTextLabelFont
-        self.textLabel!.textAlignment = self.configuration.cellTextLabelAlignment
-        if self.textLabel!.textAlignment == .center {
-            self.textLabel!.frame = CGRect(x: 0, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
-        } else if self.textLabel!.textAlignment == .left {
-            self.textLabel!.frame = CGRect(x: horizontalMargin, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
+
+        guard let textLabel = self.textLabel else { return }
+        textLabel.textColor = self.configuration.cellTextLabelColor
+        textLabel.font = self.configuration.cellTextLabelFont
+        textLabel.textAlignment = self.configuration.cellTextLabelAlignment
+        if textLabel.textAlignment == .center {
+            textLabel.frame = CGRect(x: 0, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
+        } else if textLabel.textAlignment == .left {
+            textLabel.frame = CGRect(x: horizontalMargin, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
         } else {
-            self.textLabel!.frame = CGRect(x: -horizontalMargin, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
+            textLabel.frame = CGRect(x: -horizontalMargin, y: 0, width: cellContentFrame.width, height: cellContentFrame.height)
         }
-        
+
         // Checkmark icon
-        if self.textLabel!.textAlignment == .center {
+        if textLabel.textAlignment == .center {
             self.checkmarkIcon = UIImageView(frame: CGRect(x: cellContentFrame.width - checkmarkIconWidth, y: (cellContentFrame.height - 30)/2, width: 30, height: 30))
-        } else if self.textLabel!.textAlignment == .left {
+        } else if textLabel.textAlignment == .left {
             self.checkmarkIcon = UIImageView(frame: CGRect(x: cellContentFrame.width - checkmarkIconWidth, y: (cellContentFrame.height - 30)/2, width: 30, height: 30))
         } else {
             self.checkmarkIcon = UIImageView(frame: CGRect(x: horizontalMargin, y: (cellContentFrame.height - 30)/2, width: 30, height: 30))
@@ -64,7 +66,7 @@ class BTTableViewCell: UITableViewCell {
         self.checkmarkIcon.image = self.configuration.checkMarkImage
         self.checkmarkIcon.contentMode = UIView.ContentMode.scaleAspectFill
         self.contentView.addSubview(self.checkmarkIcon)
-        
+
         // Separator for cell
         let separator = BTTableCellContentView(frame: cellContentFrame)
         if let cellSeparatorColor = self.configuration.cellSeparatorColor {
@@ -72,11 +74,11 @@ class BTTableViewCell: UITableViewCell {
         }
         self.contentView.addSubview(separator)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         self.bounds = cellContentFrame
         self.contentView.frame = self.bounds
